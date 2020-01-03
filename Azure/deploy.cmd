@@ -6,6 +6,7 @@ REM git deploy of entire repo
 REM git remote add azure https://notejamazure.scm.azurewebsites.net:443/notejamazure.git
 REM git push azure master
 
+
 az webapp deployment source config-zip -g "nordcloud" -n "NoteJamAzure" --src .\NoteJam.zip
 
 REM az webapp config show --resource-group "nordcloud" --name "NoteJamAzure" --query linuxFxVersion
