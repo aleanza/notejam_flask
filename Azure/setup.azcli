@@ -1,0 +1,9 @@
+az login
+az account list --output table
+az account set --subscription "e25bfc98-1384-4cfd-9fb9-2724af1529af"
+az account list-locations
+az group create --name "nordcloud" --location "northeurope"
+
+az appservice plan create -g "nordcloud" -n "NordcloudServicePlan" --is-linux --sku F1
+az --% webapp create -g "nordcloud" -p "NordcloudServicePlan" -n "NoteJamAzure" --runtime "Python|3.8"
+# az group deployment create --resource-group "nordcloud" --template-file "azuredeploy.json"
