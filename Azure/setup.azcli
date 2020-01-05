@@ -2,8 +2,21 @@ az login
 az account list --output table
 az account set --subscription "e25bfc98-1384-4cfd-9fb9-2724af1529af"
 az account list-locations
-az group create --name "nordcloud" --location "northeurope"
 
+# Either this... 
+az group create --name "nordcloud" --location "northeurope"
 az appservice plan create -g "nordcloud" -n "NordcloudServicePlan" --is-linux --sku F1
-az --% webapp create -g "nordcloud" -p "NordcloudServicePlan" -n "NoteJamAzure" --runtime "Python|3.8"
+az --% webapp create -g "nordcloud" -p "NordcloudServicePlan" -n "NoteJamAzure" --runtime "Python|3.8" -u https://github.com/aleanza/notejam_flask.git
+
+# According to https://docs.microsoft.com/en-us/azure/app-service/deploy-zip
+# By default, the deployment engine assumes that a ZIP file is ready to run as-is and doesn't run any build automation. To enable the same build automation as in a Git deployment, set the SCM_DO_BUILD_DURING_DEPLOYMENT app setting by running the following command in the Cloud Shell:
+az webapp config appsettings set --resource-group "nordcloud" --name "NoteJamAzure" --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+
+# or this (https://docs.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-up)
+# az webapp up -n "NoteJamAzure" -l "northeurope"
+az webapp up -l "northeurope" -n "NoteJamAzure" -p "NordcloudServicePlan" -g "nordcloud" --sku F1
+# Same for update (https://docs.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-up)
+
+# Or by an ARM Template, e.g.:
 # az group deployment create --resource-group "nordcloud" --template-file "azuredeploy.json"
+
